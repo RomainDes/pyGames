@@ -40,13 +40,16 @@ running = True
 while running:
     # Gestion des événements
     for event in pygame.event.get():
-        if event.type == pygame.MOUSEBUTTONUP:
+        if event.type == pygame.KEYDOWN:
+            running = False
+        elif event.type == pygame.MOUSEBUTTONUP:
             # Vérification des clics sur les boutons de jeu
             mouse_pos = pygame.mouse.get_pos()
             for i, game_name in enumerate(games):
                 row = i // num_columns
                 column = i % num_columns
-                button_rect = pygame.Rect(column * game_width, row * game_height, game_width, game_height)
+                button_rect = pygame.Rect(column * game_width + 20*(column+1), row * game_height + 20*(row+1), game_width, game_height)
+
                 if button_rect.collidepoint(mouse_pos):
                     f.open_game(game_name)
 
@@ -54,12 +57,33 @@ while running:
     for i, game_name in enumerate(games):
         row = i // num_columns
         column = i % num_columns
-        button_rect = pygame.Rect(column * game_width, row * game_height, game_width, game_height)
+
+        #Création du bouton
+        button_rect = pygame.Rect(column * game_width + 20*(column+1), row * game_height + 20*(row+1), game_width, game_height)
+        pygame.draw.rect(window, (255, 255, 255), button_rect)
+
+
+        # Charger l'image
+        bg = pygame.image.load("../Games/Images/" + game_name + ".jpg")
+        # Calcul de la nouvelle largeur en conservant le rapport hauteur/largeur de l'image d'origine
+        aspect_ratio = bg.get_width() / bg.get_height()
+        new_width = int(window_height * aspect_ratio)
+        # Mettre l'image à la bonne dimension
+        bg = pygame.transform.scale(bg, ((game_height - 20) * aspect_ratio, game_height - 20))
+
+
+
+        # Calculer les coordonnées pour placer l'image au centre du rectangle de destination
+        center_image_x = game_width//2 - ((game_height - 20) * aspect_ratio) // 2
+
+
+        image_rect = pygame.Rect((column * game_width) + center_image_x + 20*(column+1), row * game_height + 20*(row+1) + 10, game_width, game_height)
+
 
         # Dessiner le rectangle du bouton avec l'image en fond
-        bg = pygame.image.load("../Games/Images/" + game_name + ".jpg")
-        bg = pygame.transform.scale(bg, (game_width, game_height))
-        window.blit(bg,button_rect)
+
+        window.blit(bg,image_rect)
+
 
     # Mise à jour de l'affichage
     pygame.display.flip()
