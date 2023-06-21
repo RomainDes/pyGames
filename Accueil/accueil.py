@@ -64,7 +64,7 @@ while running:
 
 
         # Charger l'image
-        bg = pygame.image.load("../Games/Images/" + game_name + ".jpg")
+        bg = pygame.image.load("Games/Images/" + game_name + ".jpg")
         # Calcul de la nouvelle largeur en conservant le rapport hauteur/largeur de l'image d'origine
         aspect_ratio = bg.get_width() / bg.get_height()
         new_width = int(window_height * aspect_ratio)
